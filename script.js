@@ -106,9 +106,16 @@ const products = [
   }
 ];
 
-const stateKey = "baby-list-reservations";
+const appConfig = window.APP_CONFIG || {};
+const stateKey = `baby-list-reservations-${appConfig.listId || "local"}`;
+const hasSupabase = Boolean(appConfig.supabaseUrl && appConfig.supabaseAnonKey);
+const apiBaseUrl = hasSupabase ? `${appConfig.supabaseUrl}/rest/v1/baby_reservations` : "";
+const listId = appConfig.listId || "familia-bebe";
+const refreshIntervalMs = 12000;
+
 let activeFilter = "todos";
 let reservations = JSON.parse(localStorage.getItem(stateKey) || "{}");
+let isSaving = false;
 
 const list = document.querySelector("#lista");
 const template = document.querySelector("#itemTemplate");
@@ -119,9 +126,108 @@ const reservedItems = document.querySelector("#reservedItems");
 const summaryTitle = document.querySelector("#summaryTitle");
 const summaryText = document.querySelector("#summaryText");
 const shareButton = document.querySelector("#shareButton");
+const syncStatus = document.querySelector("#syncStatus");
 
-function saveReservations() {
+function getHeaders(extraHeaders = {}) {
+  return {
+    apikey: appConfig.supabaseAnonKey,
+    Authorization: `Bearer ${appConfig.supabaseAnonKey}`,
+    "Content-Type": "application/json",
+    ...extraHeaders
+  };
+}
+
+function saveLocalReservations() {
   localStorage.setItem(stateKey, JSON.stringify(reservations));
+}
+
+function setStatus(message, type = "") {
+  syncStatus.textContent = message;
+  syncStatus.className = `sync-status ${type}`.trim();
+}
+
+function reservationsFromRows(rows) {
+  return rows.reduce((acc, row) => {
+    if (row.item_id && row.reserved_by) {
+      acc[row.item_id] = row.reserved_by;
+    }
+    return acc;
+  }, {});
+}
+
+async function loadRemoteReservations({ silent = false } = {}) {
+  if (!hasSupabase) {
+    setStatus("Modo local: falta configurar Supabase para que todos vean las reservas compartidas.", "warn");
+    return;
+  }
+
+  try {
+    if (!silent) setStatus("Sincronizando reservas compartidas...");
+
+    const url = `${apiBaseUrl}?list_id=eq.${encodeURIComponent(listId)}&select=item_id,reserved_by`;
+    const response = await fetch(url, { headers: getHeaders({ "Cache-Control": "no-cache" }) });
+
+    if (!response.ok) {
+      throw new Error(`Error cargando reservas: ${response.status}`);
+    }
+
+    const rows = await response.json();
+    reservations = reservationsFromRows(rows);
+    saveLocalReservations();
+    updateStats();
+    renderProducts();
+    setStatus("Lista sincronizada. Las reservas se comparten entre familia y amigos.", "ok");
+  } catch (error) {
+    console.error(error);
+    setStatus("No se pudo sincronizar. Se muestran los datos guardados en este móvil.", "warn");
+  }
+}
+
+async function reserveRemote(productId, reservedBy) {
+  if (!hasSupabase) {
+    reservations[productId] = reservedBy;
+    saveLocalReservations();
+    return;
+  }
+
+  const response = await fetch(apiBaseUrl, {
+    method: "POST",
+    headers: getHeaders({ Prefer: "resolution=merge-duplicates,return=minimal" }),
+    body: JSON.stringify({
+      list_id: listId,
+      item_id: productId,
+      reserved_by: reservedBy,
+      updated_at: new Date().toISOString()
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error reservando: ${response.status}`);
+  }
+
+  reservations[productId] = reservedBy;
+  saveLocalReservations();
+}
+
+async function releaseRemote(productId) {
+  if (!hasSupabase) {
+    delete reservations[productId];
+    saveLocalReservations();
+    return;
+  }
+
+  const url = `${apiBaseUrl}?list_id=eq.${encodeURIComponent(listId)}&item_id=eq.${encodeURIComponent(productId)}`;
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: getHeaders({ Prefer: "return=minimal" })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error liberando reserva: ${response.status}`);
+  }
+
+  delete reservations[productId];
+  saveLocalReservations();
 }
 
 function getFilteredProducts() {
@@ -165,6 +271,7 @@ function renderProducts() {
     const description = clone.querySelector(".description");
     const input = clone.querySelector("input");
     const button = clone.querySelector(".reserve-button");
+    const reservedBadge = clone.querySelector(".reserved-badge");
     const reservedBy = reservations[product.id] || "";
 
     category.textContent = product.category;
@@ -173,36 +280,56 @@ function renderProducts() {
     title.textContent = product.name;
     description.textContent = product.description;
     input.value = reservedBy;
+    button.disabled = isSaving;
 
     if (reservedBy) {
       card.classList.add("reserved");
+      reservedBadge.hidden = false;
+      reservedBadge.textContent = `Cogido por ${reservedBy}`;
       button.textContent = "Liberar";
     }
 
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       const name = input.value.trim();
 
-      if (reservations[product.id]) {
-        delete reservations[product.id];
-      } else if (name) {
-        reservations[product.id] = name;
-      } else {
+      if (!reservations[product.id] && !name) {
         input.focus();
         input.placeholder = "Escribe tu nombre primero";
         return;
       }
 
-      saveReservations();
-      updateStats();
-      renderProducts();
+      try {
+        isSaving = true;
+        renderProducts();
+        setStatus("Guardando cambio...");
+
+        if (reservations[product.id]) {
+          await releaseRemote(product.id);
+        } else {
+          await reserveRemote(product.id, name);
+        }
+
+        await loadRemoteReservations({ silent: true });
+      } catch (error) {
+        console.error(error);
+        setStatus("No se pudo guardar el cambio. Revisa la configuración de Supabase.", "warn");
+      } finally {
+        isSaving = false;
+        updateStats();
+        renderProducts();
+      }
     });
 
-    input.addEventListener("change", () => {
+    input.addEventListener("change", async () => {
       const name = input.value.trim();
-      if (reservations[product.id] && name) {
-        reservations[product.id] = name;
-        saveReservations();
-        renderProducts();
+      if (!reservations[product.id] || !name) return;
+
+      try {
+        await reserveRemote(product.id, name);
+        await loadRemoteReservations({ silent: true });
+      } catch (error) {
+        console.error(error);
+        setStatus("No se pudo actualizar el nombre de la reserva.", "warn");
       }
     });
 
@@ -245,3 +372,8 @@ shareButton.addEventListener("click", async () => {
 
 updateStats();
 renderProducts();
+loadRemoteReservations();
+
+if (hasSupabase) {
+  setInterval(() => loadRemoteReservations({ silent: true }), refreshIntervalMs);
+}
