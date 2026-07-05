@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista para el bebé</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div class="hero-content">
+        <p class="eyebrow">Lista de nacimiento</p>
+        <h1>Cosas para comprar al bebé</h1>
+        <p class="hero-text">
+          Una lista sencilla para organizar regalos útiles, controlar prioridades y evitar compras duplicadas.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#lista">Ver lista</a>
+          <button class="button secondary" id="shareButton">Compartir</button>
+        </div>
+      </div>
+      <div class="hero-card" aria-label="Resumen de la lista">
+        <span class="baby-icon">🧸</span>
+        <h2 id="summaryTitle">Preparando la llegada</h2>
+        <p id="summaryText">Calculando productos pendientes...</p>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Filtros de la lista">
+      <div>
+        <p class="section-kicker">Organización</p>
+        <h2>Lista de compra</h2>
+      </div>
+      <div class="filters" id="filters">
+        <button class="filter active" data-filter="todos">Todos</button>
+        <button class="filter" data-filter="imprescindible">Imprescindibles</button>
+        <button class="filter" data-filter="pendiente">Pendientes</button>
+        <button class="filter" data-filter="reservado">Reservados</button>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Estado de la lista">
+      <article>
+        <span id="totalItems">0</span>
+        <p>Total</p>
+      </article>
+      <article>
+        <span id="pendingItems">0</span>
+        <p>Pendientes</p>
+      </article>
+      <article>
+        <span id="reservedItems">0</span>
+        <p>Reservados</p>
+      </article>
+    </section>
+
+    <section id="lista" class="list-grid" aria-live="polite"></section>
+
+    <section class="info-box">
+      <h2>Cómo usarla</h2>
+      <p>
+        Cada persona puede marcar un producto como reservado y escribir su nombre. Esta versión guarda los cambios en el navegador del usuario.
+        Para sincronizar reservas entre todos, habría que conectar una base de datos sencilla como Firebase o Supabase.
+      </p>
+    </section>
+  </main>
+
+  <template id="itemTemplate">
+    <article class="item-card">
+      <div class="item-header">
+        <span class="category"></span>
+        <span class="priority"></span>
+      </div>
+      <h3></h3>
+      <p class="description"></p>
+      <div class="item-footer">
+        <label>
+          Reservado por
+          <input type="text" placeholder="Nombre" />
+        </label>
+        <button class="reserve-button">Reservar</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
