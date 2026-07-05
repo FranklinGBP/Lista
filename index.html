@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="simple.css" />
 </head>
 <body>
   <main class="app">
@@ -21,18 +21,9 @@
     </header>
 
     <section class="summary" aria-label="Resumen de la lista">
-      <article>
-        <strong id="totalItems">0</strong>
-        <span>Total</span>
-      </article>
-      <article>
-        <strong id="pendingItems">0</strong>
-        <span>Pendientes</span>
-      </article>
-      <article>
-        <strong id="reservedItems">0</strong>
-        <span>Cogidos</span>
-      </article>
+      <article><strong id="totalItems">0</strong><span>Total</span></article>
+      <article><strong id="pendingItems">0</strong><span>Pendientes</span></article>
+      <article><strong id="reservedItems">0</strong><span>Cogidos</span></article>
     </section>
 
     <nav class="filters" id="filters" aria-label="Filtros">
@@ -43,29 +34,20 @@
     </nav>
 
     <p class="sync-status" id="syncStatus">Cargando lista...</p>
-
     <section id="lista" class="list" aria-live="polite"></section>
   </main>
 
   <template id="itemTemplate">
     <article class="card">
-      <div class="card-top">
-        <span class="category"></span>
-        <span class="priority"></span>
-      </div>
+      <div class="card-top"><span class="category"></span><span class="priority"></span></div>
       <h2></h2>
       <p class="description"></p>
       <p class="reserved-by" hidden></p>
-
       <div class="actions">
         <a class="buy-link" href="#" target="_blank" rel="noopener noreferrer">Ver compra</a>
         <button class="reserve-button">Reservar</button>
       </div>
-
-      <label class="name-field">
-        Tu nombre
-        <input type="text" placeholder="Ej. Franklin" />
-      </label>
+      <label class="name-field">Tu nombre<input type="text" placeholder="Ej. Franklin" /></label>
     </article>
   </template>
 
