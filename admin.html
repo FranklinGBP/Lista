@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin lista bebé</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="simple.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="header">
+      <div>
+        <p class="tag">Administración</p>
+        <h1>Editar lista</h1>
+        <p class="subtitle">Añade, edita o elimina productos de la lista del bebé.</p>
+      </div>
+      <a class="share" href="index.html">Ver lista</a>
+    </header>
+
+    <section class="card" id="loginBox">
+      <h2>Acceso</h2>
+      <p class="description">Inicia sesión con el usuario autorizado de Supabase.</p>
+      <label class="name-field">Email<input id="email" type="email" autocomplete="email" /></label>
+      <label class="name-field">Contraseña<input id="password" type="password" autocomplete="current-password" /></label>
+      <div class="actions">
+        <button class="reserve-button" id="loginButton">Entrar</button>
+        <a class="buy-link" href="index.html">Cancelar</a>
+      </div>
+    </section>
+
+    <section id="adminBox" hidden>
+      <p class="sync-status" id="adminStatus">Cargando...</p>
+
+      <section class="card">
+        <h2 id="formTitle">Añadir producto</h2>
+        <input id="productId" type="hidden" />
+        <label class="name-field">Nombre<input id="name" type="text" placeholder="Ej. Silla de paseo" /></label>
+        <label class="name-field">Descripción<input id="description" type="text" placeholder="Detalle corto" /></label>
+        <label class="name-field">Categoría<input id="category" type="text" placeholder="Ej. Paseo" /></label>
+        <label class="name-field">Prioridad
+          <select id="priority">
+            <option value="imprescindible">imprescindible</option>
+            <option value="recomendado">recomendado</option>
+            <option value="opcional">opcional</option>
+          </select>
+        </label>
+        <label class="name-field">Link de compra<input id="purchaseUrl" type="url" placeholder="https://..." /></label>
+        <label class="name-field">Orden<input id="sortOrder" type="number" value="100" /></label>
+        <label class="name-field"><input id="isActive" type="checkbox" checked /> Visible en la lista</label>
+        <div class="actions">
+          <button class="reserve-button" id="saveButton">Guardar</button>
+          <button class="buy-link" id="newButton" type="button">Nuevo</button>
+        </div>
+      </section>
+
+      <section class="list" id="productList"></section>
+      <button class="share" id="logoutButton">Salir</button>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
