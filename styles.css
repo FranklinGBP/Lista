@@ -108,13 +108,19 @@ h1 {
   font-weight: 800;
   cursor: pointer;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, opacity 0.2s ease;
 }
 
 .button:hover,
 .filter:hover,
 .reserve-button:hover {
   transform: translateY(-2px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none !important;
 }
 
 .primary,
@@ -159,7 +165,8 @@ h1 {
 
 .hero-card p,
 .description,
-.info-box p {
+.info-box p,
+.sync-status {
   color: var(--muted);
   line-height: 1.6;
 }
@@ -195,7 +202,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .stats article {
@@ -214,6 +221,20 @@ h1 {
   margin-bottom: 0;
   color: var(--muted);
   font-weight: 700;
+}
+
+.sync-status {
+  margin: 0 0 20px;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.sync-status.ok {
+  color: #32745b;
+}
+
+.sync-status.warn {
+  color: var(--accent-dark);
 }
 
 .list-grid {
@@ -239,7 +260,8 @@ h1 {
 }
 
 .category,
-.priority {
+.priority,
+.reserved-badge {
   display: inline-flex;
   align-items: center;
   min-height: 30px;
@@ -262,6 +284,12 @@ h1 {
 .priority.imprescindible {
   background: #ffe3d7;
   color: var(--accent-dark);
+}
+
+.reserved-badge {
+  margin: 6px 0 4px;
+  background: rgba(50, 116, 91, 0.12);
+  color: #32745b;
 }
 
 .item-card h3 {
