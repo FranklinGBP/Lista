@@ -3,94 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lista para el bebé</title>
+  <title>Lista bebé</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="app-shell">
-    <section class="hero">
-      <div class="hero-content">
-        <p class="eyebrow">Lista de nacimiento</p>
-        <h1>Cosas para comprar al bebé</h1>
-        <p class="hero-text">
-          Una lista sencilla para organizar regalos útiles, controlar prioridades y evitar compras duplicadas entre familia y amigos.
-        </p>
-        <div class="hero-actions">
-          <a class="button primary" href="#lista">Ver lista</a>
-          <button class="button secondary" id="shareButton">Compartir</button>
-        </div>
-      </div>
-      <div class="hero-card" aria-label="Resumen de la lista">
-        <span class="baby-icon">🧸</span>
-        <h2 id="summaryTitle">Preparando la llegada</h2>
-        <p id="summaryText">Calculando productos pendientes...</p>
-      </div>
-    </section>
-
-    <section class="toolbar" aria-label="Filtros de la lista">
+  <main class="app">
+    <header class="header">
       <div>
-        <p class="section-kicker">Organización</p>
-        <h2>Lista de compra</h2>
+        <p class="tag">Lista compartida</p>
+        <h1>Lista para el bebé</h1>
+        <p class="subtitle">Reserva lo que quieras comprar para evitar duplicados.</p>
       </div>
-      <div class="filters" id="filters">
-        <button class="filter active" data-filter="todos">Todos</button>
-        <button class="filter" data-filter="imprescindible">Imprescindibles</button>
-        <button class="filter" data-filter="pendiente">Pendientes</button>
-        <button class="filter" data-filter="reservado">Reservados</button>
-      </div>
-    </section>
+      <button class="share" id="shareButton">Compartir</button>
+    </header>
 
-    <section class="stats" aria-label="Estado de la lista">
+    <section class="summary" aria-label="Resumen de la lista">
       <article>
-        <span id="totalItems">0</span>
-        <p>Total</p>
+        <strong id="totalItems">0</strong>
+        <span>Total</span>
       </article>
       <article>
-        <span id="pendingItems">0</span>
-        <p>Pendientes</p>
+        <strong id="pendingItems">0</strong>
+        <span>Pendientes</span>
       </article>
       <article>
-        <span id="reservedItems">0</span>
-        <p>Reservados</p>
+        <strong id="reservedItems">0</strong>
+        <span>Cogidos</span>
       </article>
     </section>
 
-    <p class="sync-status" id="syncStatus">Cargando estado compartido...</p>
+    <nav class="filters" id="filters" aria-label="Filtros">
+      <button class="filter active" data-filter="todos">Todos</button>
+      <button class="filter" data-filter="pendiente">Pendientes</button>
+      <button class="filter" data-filter="reservado">Cogidos</button>
+      <button class="filter" data-filter="imprescindible">Imprescindibles</button>
+    </nav>
 
-    <section id="lista" class="list-grid" aria-live="polite"></section>
+    <p class="sync-status" id="syncStatus">Cargando lista...</p>
 
-    <section class="info-box">
-      <h2>Cómo usarla</h2>
-      <p>
-        Cada persona escribe su nombre y marca el producto como reservado. Si Supabase está configurado, todos verán las reservas compartidas desde cualquier móvil.
-        Si todavía no está configurado, la web funcionará en modo local solo para probar.
-      </p>
-    </section>
+    <section id="lista" class="list" aria-live="polite"></section>
   </main>
 
   <template id="itemTemplate">
-    <article class="item-card">
-      <div class="item-header">
+    <article class="card">
+      <div class="card-top">
         <span class="category"></span>
         <span class="priority"></span>
       </div>
-      <h3></h3>
+      <h2></h2>
       <p class="description"></p>
-      <div class="reserved-badge" hidden></div>
-      <div class="item-footer">
-        <label>
-          Reservado por
-          <input type="text" placeholder="Nombre" />
-        </label>
+      <p class="reserved-by" hidden></p>
+
+      <div class="actions">
+        <a class="buy-link" href="#" target="_blank" rel="noopener noreferrer">Ver compra</a>
         <button class="reserve-button">Reservar</button>
       </div>
+
+      <label class="name-field">
+        Tu nombre
+        <input type="text" placeholder="Ej. Franklin" />
+      </label>
     </article>
   </template>
 
   <script src="config.js"></script>
+  <script src="links.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
