@@ -16,7 +16,7 @@
         <p class="eyebrow">Lista de nacimiento</p>
         <h1>Cosas para comprar al bebé</h1>
         <p class="hero-text">
-          Una lista sencilla para organizar regalos útiles, controlar prioridades y evitar compras duplicadas.
+          Una lista sencilla para organizar regalos útiles, controlar prioridades y evitar compras duplicadas entre familia y amigos.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#lista">Ver lista</a>
@@ -58,13 +58,15 @@
       </article>
     </section>
 
+    <p class="sync-status" id="syncStatus">Cargando estado compartido...</p>
+
     <section id="lista" class="list-grid" aria-live="polite"></section>
 
     <section class="info-box">
       <h2>Cómo usarla</h2>
       <p>
-        Cada persona puede marcar un producto como reservado y escribir su nombre. Esta versión guarda los cambios en el navegador del usuario.
-        Para sincronizar reservas entre todos, habría que conectar una base de datos sencilla como Firebase o Supabase.
+        Cada persona escribe su nombre y marca el producto como reservado. Si Supabase está configurado, todos verán las reservas compartidas desde cualquier móvil.
+        Si todavía no está configurado, la web funcionará en modo local solo para probar.
       </p>
     </section>
   </main>
@@ -77,6 +79,7 @@
       </div>
       <h3></h3>
       <p class="description"></p>
+      <div class="reserved-badge" hidden></div>
       <div class="item-footer">
         <label>
           Reservado por
@@ -87,6 +90,7 @@
     </article>
   </template>
 
+  <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
