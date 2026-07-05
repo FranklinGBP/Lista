@@ -1,58 +1,228 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lista bebé</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="simple.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lista de regalos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F7F1; --ink:#2A3A2E; --muted:#6C7B6F; --card:#FFFFFF;
+  --sage:#5F8D6B; --sage-soft:#E2EDE3; --sage-deep:#3E6B4C;
+  --amber:#C98A2D; --amber-soft:#F6EBD8; --line:#DFE7DD;
+  --radius:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Nunito Sans',system-ui,sans-serif;line-height:1.55}
+.wrap{max-width:880px;margin:0 auto;padding:24px 16px 80px}
+header{padding:26px 0 8px}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sage-deep);font-weight:700}
+h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(1.9rem,6vw,2.8rem);line-height:1.1;margin:4px 0 6px}
+.sub{color:var(--muted);max-width:52ch}
+.posts{margin:22px 0 6px;display:grid;gap:12px}
+.post{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--sage);border-radius:var(--radius);padding:14px 16px}
+.post h3{font-family:'Baloo 2',cursive;font-size:1.05rem;margin-bottom:2px;color:var(--sage-deep)}
+.post p{white-space:pre-wrap;font-size:.95rem}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 14px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 14px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer}
+.chip.on{background:var(--sage);border-color:var(--sage);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.gift{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+.gift.done{opacity:.72}
+.gift img.photo{width:100%;height:160px;object-fit:cover;background:var(--sage-soft)}
+.gift .nophoto{width:100%;height:110px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:var(--sage-soft)}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.gift h3{font-family:'Baloo 2',cursive;font-size:1.12rem;line-height:1.25}
+.desc{font-size:.9rem;color:var(--muted)}
+.meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.82rem}
+.tag{background:var(--sage-soft);color:var(--sage-deep);border-radius:999px;padding:2px 10px;font-weight:700}
+.price{color:var(--muted);font-weight:700}
+a.link{color:var(--sage-deep);font-weight:700;font-size:.88rem;text-decoration:none}
+a.link:hover{text-decoration:underline}
+.ribbon{position:absolute;top:14px;right:-38px;transform:rotate(38deg);background:var(--ink);color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 42px}
+.slots{display:flex;gap:4px;margin-top:2px}
+.slots span{flex:1;height:9px;border-radius:5px;background:var(--sage-soft)}
+.slots span.f{background:var(--sage)}
+.slotlbl{font-size:.8rem;color:var(--muted);font-weight:700}
+button.reserve{margin-top:auto;background:var(--sage);color:#fff;border:none;border-radius:12px;padding:11px;font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;cursor:pointer}
+button.reserve:hover{background:var(--sage-deep)}
+button.reserve:disabled{background:var(--line);color:var(--muted);cursor:default}
+.empty,.loading{text-align:center;color:var(--muted);padding:60px 0}
+/* modal */
+.overlay{position:fixed;inset:0;background:rgba(42,58,46,.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.overlay.open{display:flex}
+.modal{background:var(--card);border-radius:var(--radius);max-width:420px;width:100%;padding:22px}
+.modal h3{font-family:'Baloo 2',cursive;font-size:1.25rem;margin-bottom:4px}
+.modal .hint{font-size:.85rem;color:var(--muted);margin-bottom:14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:.83rem;font-weight:700;margin-bottom:4px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff}
+.actions{display:flex;gap:10px;margin-top:6px}
+.actions button{flex:1;padding:11px;border-radius:12px;font-family:'Baloo 2',cursive;font-weight:700;font-size:1rem;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink)}
+.actions button.primary{background:var(--sage);border-color:var(--sage);color:#fff}
+.msg{margin-top:10px;font-size:.88rem;font-weight:700;display:none}
+.msg.err{color:#A14224;display:block}
+.msg.ok{color:var(--sage-deep);display:block}
+footer{margin-top:48px;text-align:center;font-size:.8rem;color:var(--muted)}
+footer a{color:inherit}
+@media (prefers-reduced-motion:no-preference){
+  .gift{transition:transform .15s ease}
+  .gift:not(.done):hover{transform:translateY(-3px)}
+}
+</style>
 </head>
 <body>
-  <main class="app">
-    <header class="header">
-      <div>
-        <p class="tag">Lista compartida</p>
-        <h1>Lista para el bebé</h1>
-        <p class="subtitle">Reserva lo que quieras comprar para evitar duplicados.</p>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Lista de regalos</div>
+    <h1 id="pageTitle">🎁 Nuestra lista</h1>
+    <p class="sub">Elige un regalo y resérvalo para que nadie lo repita. Solo el organizador verá tu nombre; el resto de invitados únicamente verá que está reservado.</p>
+  </header>
+
+  <section class="posts" id="posts"></section>
+
+  <div class="filters" id="filters"></div>
+
+  <div class="loading" id="loading">Cargando la lista…</div>
+  <section class="grid" id="grid"></section>
+  <div class="empty" id="empty" style="display:none">Todavía no hay regalos publicados. ¡Vuelve pronto!</div>
+
+  <footer><a href="admin.html">Acceso organizador</a></footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3 id="mTitle">Reservar regalo</h3>
+    <p class="hint">Tu nombre solo lo verá el organizador. Los demás invitados solo verán que el regalo está reservado.</p>
+    <div class="field"><label for="fName">Tu nombre *</label><input id="fName" maxlength="80" placeholder="Ej. María y Jordi"></div>
+    <div class="field"><label for="fContact">Teléfono o email (opcional)</label><input id="fContact" maxlength="120" placeholder="Por si hay que avisarte de algo"></div>
+    <div class="field" id="slotsField" style="display:none"><label for="fSlots">Participaciones que aportas</label><select id="fSlots"></select></div>
+    <div class="field"><label for="fNote">Nota para el organizador (opcional)</label><textarea id="fNote" rows="2" maxlength="300"></textarea></div>
+    <div class="actions">
+      <button type="button" id="btnCancel">Cancelar</button>
+      <button type="button" class="primary" id="btnConfirm">Reservar</button>
+    </div>
+    <div class="msg" id="mMsg"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://kvhbqlrydknrmsfnxcrp.supabase.co";
+const SUPABASE_KEY = "sb_publishable_QTc1EGslumW0BYDyP20NKg_DrIh25XH";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let items = [], currentFilter = "todos", currentItem = null;
+
+const esc = s => (s ?? "").toString()
+  .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+  .replaceAll('"',"&quot;").replaceAll("'","&#39;");
+
+async function load(){
+  const [posts, gifts] = await Promise.all([
+    sb.from("gift_posts").select("*").eq("is_published", true).order("created_at",{ascending:false}),
+    sb.from("gift_items").select("*").eq("is_active", true).order("sort_order").order("created_at")
+  ]);
+  document.getElementById("loading").style.display = "none";
+  renderPosts(posts.data || []);
+  items = gifts.data || [];
+  renderFilters();
+  render();
+}
+
+function renderPosts(posts){
+  document.getElementById("posts").innerHTML = posts.map(p =>
+    `<article class="post"><h3>📌 ${esc(p.title)}</h3><p>${esc(p.body)}</p></article>`).join("");
+}
+
+function renderFilters(){
+  const cats = [...new Set(items.map(i => i.category).filter(Boolean))];
+  const el = document.getElementById("filters");
+  if(!cats.length){ el.style.display="none"; return; }
+  el.innerHTML = ["todos", ...cats].map(c =>
+    `<button class="chip ${c===currentFilter?"on":""}" data-c="${esc(c)}">${c==="todos"?"Todos":esc(c)}</button>`).join("");
+  el.querySelectorAll(".chip").forEach(b => b.onclick = () => { currentFilter = b.dataset.c; renderFilters(); render(); });
+}
+
+function render(){
+  const list = items.filter(i => currentFilter==="todos" || i.category===currentFilter);
+  document.getElementById("empty").style.display = list.length ? "none" : "block";
+  document.getElementById("grid").innerHTML = list.map(i => {
+    const left = i.slots_total - i.slots_taken;
+    const full = left <= 0;
+    const segs = i.is_group
+      ? `<div class="slots">${Array.from({length:i.slots_total},(_,k)=>`<span class="${k<i.slots_taken?"f":""}"></span>`).join("")}</div>
+         <div class="slotlbl">${full ? "Completo 🎉" : `${i.slots_taken} de ${i.slots_total} participaciones · quedan ${left}`}</div>`
+      : "";
+    return `<article class="gift ${full?"done":""}">
+      ${full ? `<div class="ribbon">Reservado</div>` : ""}
+      ${i.image_url ? `<img class="photo" src="${esc(i.image_url)}" alt="" loading="lazy" onerror="this.remove()">` : `<div class="nophoto">🎁</div>`}
+      <div class="body">
+        <h3>${esc(i.title)}</h3>
+        ${i.description ? `<p class="desc">${esc(i.description)}</p>` : ""}
+        <div class="meta">
+          ${i.category ? `<span class="tag">${esc(i.category)}</span>` : ""}
+          ${i.is_group ? `<span class="tag">Entre varios</span>` : ""}
+          ${i.price_estimate != null ? `<span class="price">≈ ${Number(i.price_estimate).toLocaleString("es-ES")} €</span>` : ""}
+        </div>
+        ${i.product_url ? `<a class="link" href="${esc(i.product_url)}" target="_blank" rel="noopener">Ver producto ↗</a>` : ""}
+        ${segs}
+        <button class="reserve" data-id="${i.id}" ${full?"disabled":""}>${full ? "Ya reservado" : (i.is_group ? "Participar" : "Reservar")}</button>
       </div>
-      <button class="share" id="shareButton">Compartir</button>
-    </header>
+    </article>`;
+  }).join("");
+  document.querySelectorAll(".reserve:not(:disabled)").forEach(b => b.onclick = () => openModal(b.dataset.id));
+}
 
-    <section class="summary" aria-label="Resumen de la lista">
-      <article><strong id="totalItems">0</strong><span>Total</span></article>
-      <article><strong id="pendingItems">0</strong><span>Pendientes</span></article>
-      <article><strong id="reservedItems">0</strong><span>Cogidos</span></article>
-    </section>
+function openModal(id){
+  currentItem = items.find(i => i.id === id);
+  if(!currentItem) return;
+  document.getElementById("mTitle").textContent = (currentItem.is_group ? "Participar en: " : "Reservar: ") + currentItem.title;
+  const sf = document.getElementById("slotsField"), sel = document.getElementById("fSlots");
+  if(currentItem.is_group){
+    const left = currentItem.slots_total - currentItem.slots_taken;
+    sel.innerHTML = Array.from({length:left},(_,k)=>`<option value="${k+1}">${k+1}</option>`).join("");
+    sf.style.display = "block";
+  } else sf.style.display = "none";
+  document.getElementById("mMsg").className = "msg";
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("fName").focus();
+}
 
-    <nav class="filters" id="filters" aria-label="Filtros">
-      <button class="filter active" data-filter="todos">Todos</button>
-      <button class="filter" data-filter="pendiente">Pendientes</button>
-      <button class="filter" data-filter="reservado">Cogidos</button>
-      <button class="filter" data-filter="imprescindible">Imprescindibles</button>
-    </nav>
+function closeModal(){
+  document.getElementById("overlay").classList.remove("open");
+  ["fName","fContact","fNote"].forEach(id => document.getElementById(id).value = "");
+}
 
-    <p class="sync-status" id="syncStatus">Cargando lista...</p>
-    <section id="lista" class="list" aria-live="polite"></section>
-  </main>
+document.getElementById("btnCancel").onclick = closeModal;
+document.getElementById("overlay").onclick = e => { if(e.target.id==="overlay") closeModal(); };
 
-  <template id="itemTemplate">
-    <article class="card">
-      <div class="card-top"><span class="category"></span><span class="priority"></span></div>
-      <h2></h2>
-      <p class="description"></p>
-      <p class="reserved-by" hidden></p>
-      <div class="actions">
-        <a class="buy-link" href="#" target="_blank" rel="noopener noreferrer">Ver compra</a>
-        <button class="reserve-button">Reservar</button>
-      </div>
-      <label class="name-field">Tu nombre<input type="text" placeholder="Ej. Franklin" /></label>
-    </article>
-  </template>
+document.getElementById("btnConfirm").onclick = async () => {
+  const msg = document.getElementById("mMsg");
+  const name = document.getElementById("fName").value.trim();
+  if(name.length < 2){ msg.textContent = "Escribe tu nombre, por favor."; msg.className = "msg err"; return; }
+  const btn = document.getElementById("btnConfirm");
+  btn.disabled = true; btn.textContent = "Reservando…";
+  const { data, error } = await sb.rpc("gift_reserve", {
+    p_item_id: currentItem.id,
+    p_name: name,
+    p_contact: document.getElementById("fContact").value.trim() || null,
+    p_note: document.getElementById("fNote").value.trim() || null,
+    p_slots: currentItem.is_group ? Number(document.getElementById("fSlots").value) : 1
+  });
+  btn.disabled = false; btn.textContent = "Reservar";
+  if(error || !data?.ok){
+    msg.textContent = data?.error || "No se pudo completar la reserva. Inténtalo de nuevo.";
+    msg.className = "msg err";
+    await load();
+    return;
+  }
+  msg.textContent = "¡Reserva confirmada! Gracias 💚"; msg.className = "msg ok";
+  setTimeout(() => { closeModal(); load(); }, 1200);
+};
 
-  <script src="config.js"></script>
-  <script src="links.js"></script>
-  <script src="script.js"></script>
+load();
+</script>
 </body>
 </html>
