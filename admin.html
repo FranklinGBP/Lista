@@ -1,281 +1,38 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Organizador · Lista de regalos</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F4F7F1;--ink:#2A3A2E;--muted:#6C7B6F;--card:#fff;--sage:#5F8D6B;--sage-soft:#E2EDE3;
---sage-deep:#3E6B4C;--line:#DFE7DD;--danger:#A14224;--radius:16px}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:'Nunito Sans',system-ui,sans-serif;line-height:1.5}
-.wrap{max-width:860px;margin:0 auto;padding:24px 16px 80px}
-h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:1.7rem;margin-bottom:4px}
-.sub{color:var(--muted);font-size:.9rem;margin-bottom:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
-.field{margin-bottom:12px}
-.field label{display:block;font-size:.83rem;font-weight:700;margin-bottom:4px}
-.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.check{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;margin-bottom:12px}
-.check input{width:18px;height:18px}
-button{font-family:'Baloo 2',cursive;font-weight:700;font-size:.95rem;border-radius:11px;padding:10px 16px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink)}
-button.primary{background:var(--sage);border-color:var(--sage);color:#fff}
-button.primary:hover{background:var(--sage-deep)}
-button.danger{color:var(--danger);border-color:#E4C4B6}
-button.small{padding:6px 12px;font-size:.85rem}
-.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.tabs button.on{background:var(--sage);border-color:var(--sage);color:#fff}
-.item{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;background:#fff}
-.item h4{font-family:'Baloo 2',cursive;font-size:1.02rem}
-.item .sub2{font-size:.83rem;color:var(--muted);margin:2px 0 8px}
-.item .btns{display:flex;gap:8px;flex-wrap:wrap}
-.badge{display:inline-block;font-size:.75rem;font-weight:800;border-radius:999px;padding:2px 10px;background:var(--sage-soft);color:var(--sage-deep);margin-left:6px}
-.badge.off{background:#EEE;color:#888}
-.res{font-size:.88rem;border-top:1px dashed var(--line);padding:8px 0 2px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.res .who{font-weight:700}
-.res .det{color:var(--muted);font-size:.82rem}
-.msg{font-size:.88rem;font-weight:700;margin-top:8px;display:none}
-.msg.err{color:var(--danger);display:block}
-.msg.ok{color:var(--sage-deep);display:block}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;flex-wrap:wrap}
-a.back{color:var(--muted);font-size:.85rem}
-#app{display:none}
-hr.sep{border:none;border-top:1px solid var(--line);margin:14px 0}
+:root{--bg:#f4f7f1;--ink:#2a3a2e;--muted:#6c7b6f;--card:#fff;--sage:#5f8d6b;--soft:#e2ede3;--line:#dfe7dd;--danger:#a14224;--r:16px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito Sans',system-ui,sans-serif}.wrap{max-width:900px;margin:auto;padding:24px 16px 70px}h1,h2,h3,h4{font-family:'Baloo 2',cursive;margin:0 0 6px;line-height:1.1}.sub,.small{color:var(--muted)}.card,.item{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}.field{margin:10px 0}.field label{display:block;font-size:.85rem;font-weight:800;margin-bottom:4px}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.check{display:flex;gap:8px;align-items:center;font-weight:800;margin:10px 0}.check input{width:18px;height:18px}button,.btn{font-family:'Baloo 2';font-weight:800;font-size:.96rem;border-radius:11px;padding:10px 15px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);text-decoration:none}button.primary{background:var(--sage);border-color:var(--sage);color:#fff}.danger{color:var(--danger);border-color:#e4c4b6}.smallbtn{padding:6px 10px;font-size:.85rem}.topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.tabs .on{background:var(--sage);color:#fff}.badge{display:inline-block;font-size:.75rem;font-weight:900;border-radius:999px;padding:2px 9px;background:var(--soft);color:#3e6b4c;margin-left:5px}.badge.off{background:#eee;color:#888}.sub2{font-size:.86rem;color:var(--muted);margin:4px 0 9px}.btns{display:flex;gap:8px;flex-wrap:wrap}.res{border-top:1px dashed var(--line);padding:8px 0;display:flex;justify-content:space-between;gap:8px}.who{font-weight:900}.msg{display:none;font-weight:900;margin-top:8px}.msg.err{display:block;color:var(--danger)}.msg.ok{display:block;color:#3e6b4c}a{color:var(--muted)}#app{display:none}@media(max-width:640px){.row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
-
-  <!-- LOGIN -->
-  <div id="login">
-    <h1>Acceso organizador</h1>
-    <p class="sub">Solo para gestionar la lista. Los invitados no necesitan cuenta.</p>
-    <div class="card">
-      <div class="field"><label>Email</label><input id="lEmail" type="email" autocomplete="username"></div>
-      <div class="field"><label>Contraseña</label><input id="lPass" type="password" autocomplete="current-password"></div>
-      <button class="primary" id="btnLogin">Entrar</button>
-      <div class="msg" id="lMsg"></div>
-    </div>
-    <a class="back" href="index.html">← Volver a la lista</a>
-  </div>
-
-  <!-- APP -->
-  <div id="app">
-    <div class="topbar">
-      <h1>Panel del organizador</h1>
-      <div><a class="back" href="index.html">Ver lista pública</a> &nbsp; <button class="small" id="btnLogout">Salir</button></div>
-    </div>
-    <div class="tabs">
-      <button data-t="gifts" class="on">🎁 Regalos</button>
-      <button data-t="reservas">🗒️ Reservas</button>
-      <button data-t="posts">📌 Avisos</button>
-    </div>
-
-    <!-- TAB REGALOS -->
-    <div id="tab-gifts">
-      <div class="card">
-        <h4 style="font-family:'Baloo 2';margin-bottom:10px" id="gFormTitle">Añadir regalo</h4>
-        <div class="field"><label>Nombre del regalo *</label><input id="gTitle" maxlength="140"></div>
-        <div class="field"><label>Descripción</label><textarea id="gDesc" rows="2"></textarea></div>
-        <div class="row">
-          <div class="field"><label>Precio aprox. (€)</label><input id="gPrice" type="number" min="0" step="0.01"></div>
-          <div class="field"><label>Categoría</label><input id="gCat" maxlength="40" placeholder="Ropa, Paseo, Habitación…"></div>
-        </div>
-        <div class="field"><label>Enlace al producto</label><input id="gUrl" type="url" placeholder="https://…"></div>
-        <div class="field"><label>URL de imagen</label><input id="gImg" type="url" placeholder="https://… (opcional)"></div>
-        <div class="check"><input type="checkbox" id="gGroup"> <label for="gGroup" style="margin:0">Regalo entre varios</label></div>
-        <div class="row" id="gSlotsRow" style="display:none">
-          <div class="field"><label>Nº de participaciones</label><input id="gSlots" type="number" min="2" value="4"></div>
-        </div>
-        <div class="check"><input type="checkbox" id="gActive" checked> <label for="gActive" style="margin:0">Visible en la lista pública</label></div>
-        <div style="display:flex;gap:8px">
-          <button class="primary" id="btnSaveGift">Guardar regalo</button>
-          <button id="btnCancelEdit" style="display:none">Cancelar edición</button>
-        </div>
-        <div class="msg" id="gMsg"></div>
-      </div>
-      <div id="giftList"></div>
-    </div>
-
-    <!-- TAB RESERVAS -->
-    <div id="tab-reservas" style="display:none"><div id="resList"></div></div>
-
-    <!-- TAB AVISOS -->
-    <div id="tab-posts" style="display:none">
-      <div class="card">
-        <h4 style="font-family:'Baloo 2';margin-bottom:10px">Publicar aviso</h4>
-        <div class="field"><label>Título *</label><input id="pTitle" maxlength="120" placeholder="Ej. Dirección de entrega"></div>
-        <div class="field"><label>Texto *</label><textarea id="pBody" rows="3" placeholder="Podéis enviar los paquetes a…"></textarea></div>
-        <button class="primary" id="btnSavePost">Publicar</button>
-        <div class="msg" id="pMsg"></div>
-      </div>
-      <div id="postList"></div>
-    </div>
-  </div>
-</div>
-
+<div id="login"><h1>Acceso organizador</h1><p class="sub">Solo para gestionar la lista. Los invitados no necesitan cuenta.</p><div class="card"><div class="field"><label>Email</label><input id="lEmail" type="email" autocomplete="username"></div><div class="field"><label>Contraseña</label><input id="lPass" type="password" autocomplete="current-password"></div><button class="primary" id="btnLogin">Entrar</button><div class="msg" id="lMsg"></div></div><a href="index.html">← Volver a la lista</a></div>
+<div id="app"><div class="topbar"><h1>Panel del organizador</h1><div><a href="index.html">Ver lista pública</a> <button class="smallbtn" id="btnLogout">Salir</button></div></div><div class="tabs"><button data-t="gifts" class="on">🎁 Regalos</button><button data-t="reservas">🗒️ Reservas</button><button data-t="posts">📌 Avisos</button></div>
+<div id="tab-gifts"><div class="card"><h3 id="gFormTitle">Añadir regalo</h3><input id="gId" type="hidden"><div class="field"><label>Nombre *</label><input id="gTitle"></div><div class="field"><label>Descripción</label><textarea id="gDesc" rows="2"></textarea></div><div class="row"><div class="field"><label>Precio aprox. (€)</label><input id="gPrice" type="number" min="0" step="0.01"></div><div class="field"><label>Categoría</label><input id="gCat" placeholder="Ropa, Paseo…"></div></div><div class="field"><label>Link de compra</label><input id="gUrl" type="url" placeholder="https://..."></div><div class="field"><label>URL imagen</label><input id="gImg" type="url" placeholder="https://..."></div><div class="check"><input type="checkbox" id="gGroup"><label for="gGroup">Regalo entre varios</label></div><div class="field" id="gSlotsRow" style="display:none"><label>Nº participaciones</label><input id="gSlots" type="number" min="2" value="4"></div><div class="check"><input type="checkbox" id="gActive" checked><label for="gActive">Visible</label></div><div class="btns"><button class="primary" id="btnSaveGift">Guardar</button><button id="btnCancelEdit" style="display:none">Cancelar</button></div><div class="msg" id="gMsg"></div></div><div id="giftList"></div></div>
+<div id="tab-reservas" style="display:none"><div id="resList"></div></div>
+<div id="tab-posts" style="display:none"><div class="card"><h3>Publicar aviso</h3><div class="field"><label>Título *</label><input id="pTitle"></div><div class="field"><label>Texto *</label><textarea id="pBody" rows="3"></textarea></div><button class="primary" id="btnSavePost">Publicar</button><div class="msg" id="pMsg"></div></div><div id="postList"></div></div>
+</div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = "https://kvhbqlrydknrmsfnxcrp.supabase.co";
-const SUPABASE_KEY = "sb_publishable_QTc1EGslumW0BYDyP20NKg_DrIh25XH";
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-const esc = s => (s ?? "").toString().replaceAll("&","&amp;").replaceAll("<","&lt;")
-  .replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");
-const $ = id => document.getElementById(id);
-let editingId = null;
-
-/* ---------- sesión ---------- */
-async function boot(){
-  const { data:{ session } } = await sb.auth.getSession();
-  if(session){ $("login").style.display="none"; $("app").style.display="block"; refreshAll(); }
-  else { $("login").style.display="block"; $("app").style.display="none"; }
-}
-$("btnLogin").onclick = async () => {
-  const { error } = await sb.auth.signInWithPassword({ email:$("lEmail").value.trim(), password:$("lPass").value });
-  const m = $("lMsg");
-  if(error){ m.textContent = "No se pudo iniciar sesión: " + error.message; m.className = "msg err"; return; }
-  boot();
-};
-$("btnLogout").onclick = async () => { await sb.auth.signOut(); boot(); };
-
-/* ---------- pestañas ---------- */
-document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
-  document.querySelectorAll(".tabs button").forEach(x => x.classList.remove("on"));
-  b.classList.add("on");
-  ["gifts","reservas","posts"].forEach(t => $("tab-"+t).style.display = t===b.dataset.t ? "block" : "none");
-});
-
-/* ---------- regalos ---------- */
-$("gGroup").onchange = () => $("gSlotsRow").style.display = $("gGroup").checked ? "grid" : "none";
-
-function fillForm(g){
-  editingId = g?.id || null;
-  $("gFormTitle").textContent = g ? "Editar regalo" : "Añadir regalo";
-  $("btnCancelEdit").style.display = g ? "inline-block" : "none";
-  $("gTitle").value = g?.title || ""; $("gDesc").value = g?.description || "";
-  $("gPrice").value = g?.price_estimate ?? ""; $("gCat").value = g?.category || "";
-  $("gUrl").value = g?.product_url || ""; $("gImg").value = g?.image_url || "";
-  $("gGroup").checked = !!g?.is_group; $("gGroup").onchange();
-  $("gSlots").value = g?.is_group ? g.slots_total : 4;
-  $("gActive").checked = g ? g.is_active : true;
-  if(g) window.scrollTo({top:0, behavior:"smooth"});
-}
-$("btnCancelEdit").onclick = () => fillForm(null);
-
-$("btnSaveGift").onclick = async () => {
-  const m = $("gMsg");
-  const title = $("gTitle").value.trim();
-  if(!title){ m.textContent = "El nombre del regalo es obligatorio."; m.className = "msg err"; return; }
-  const isGroup = $("gGroup").checked;
-  const payload = {
-    title, description: $("gDesc").value.trim() || null,
-    price_estimate: $("gPrice").value === "" ? null : Number($("gPrice").value),
-    category: $("gCat").value.trim() || null,
-    product_url: $("gUrl").value.trim() || null,
-    image_url: $("gImg").value.trim() || null,
-    is_group: isGroup,
-    slots_total: isGroup ? Math.max(2, Number($("gSlots").value)||2) : 1,
-    is_active: $("gActive").checked
-  };
-  const q = editingId
-    ? sb.from("gift_items").update(payload).eq("id", editingId)
-    : sb.from("gift_items").insert(payload);
-  const { error } = await q;
-  if(error){ m.textContent = "Error al guardar: " + error.message; m.className = "msg err"; return; }
-  m.textContent = editingId ? "Regalo actualizado." : "Regalo añadido."; m.className = "msg ok";
-  fillForm(null); loadGifts(); loadReservas();
-};
-
-let giftsCache = [];
-async function loadGifts(){
-  const { data, error } = await sb.from("gift_items").select("*").order("sort_order").order("created_at");
-  if(error){ $("giftList").innerHTML = `<p class="msg err" style="display:block">${esc(error.message)}</p>`; return; }
-  giftsCache = data || [];
-  $("giftList").innerHTML = giftsCache.map(g => `
-    <div class="item">
-      <h4>${esc(g.title)}
-        <span class="badge ${g.is_active?"":"off"}">${g.is_active?"Visible":"Oculto"}</span>
-        ${g.is_group ? `<span class="badge">Grupal ${g.slots_taken}/${g.slots_total}</span>`
-                     : `<span class="badge ${g.slots_taken? "":"off"}">${g.slots_taken?"Reservado":"Libre"}</span>`}
-      </h4>
-      <div class="sub2">${g.category?esc(g.category)+" · ":""}${g.price_estimate!=null?("≈ "+g.price_estimate+" € · "):""}${esc(g.description||"")}</div>
-      <div class="btns">
-        <button class="small" data-e="${g.id}">Editar</button>
-        <button class="small" data-v="${g.id}">${g.is_active?"Ocultar":"Mostrar"}</button>
-        <button class="small danger" data-d="${g.id}">Eliminar</button>
-      </div>
-    </div>`).join("") || `<p class="sub">Aún no hay regalos. Añade el primero arriba.</p>`;
-  $("giftList").querySelectorAll("[data-e]").forEach(b => b.onclick = () => fillForm(giftsCache.find(x=>x.id===b.dataset.e)));
-  $("giftList").querySelectorAll("[data-v]").forEach(b => b.onclick = async () => {
-    const g = giftsCache.find(x=>x.id===b.dataset.v);
-    await sb.from("gift_items").update({is_active:!g.is_active}).eq("id",g.id); loadGifts();
-  });
-  $("giftList").querySelectorAll("[data-d]").forEach(b => b.onclick = async () => {
-    if(!confirm("¿Eliminar este regalo y sus reservas? No se puede deshacer.")) return;
-    await sb.from("gift_items").delete().eq("id",b.dataset.d); loadGifts(); loadReservas();
-  });
-}
-
-/* ---------- reservas ---------- */
-async function loadReservas(){
-  const { data, error } = await sb.from("gift_reservations")
-    .select("*, gift_items(title)").order("created_at",{ascending:false});
-  if(error){ $("resList").innerHTML = `<p class="msg err" style="display:block">${esc(error.message)}</p>`; return; }
-  if(!data?.length){ $("resList").innerHTML = `<p class="sub">Todavía no hay reservas.</p>`; return; }
-  const byGift = {};
-  data.forEach(r => (byGift[r.gift_items?.title || "—"] ??= []).push(r));
-  $("resList").innerHTML = Object.entries(byGift).map(([t, rs]) => `
-    <div class="item"><h4>${esc(t)}</h4>
-      ${rs.map(r => `<div class="res">
-        <div><span class="who">${esc(r.reserver_name)}</span>${r.slots>1?` <span class="badge">${r.slots} particip.</span>`:""}
-          <div class="det">${r.reserver_contact?esc(r.reserver_contact)+" · ":""}${r.note?"«"+esc(r.note)+"» · ":""}${new Date(r.created_at).toLocaleDateString("es-ES")}</div>
-        </div>
-        <button class="small danger" data-r="${r.id}">Anular</button>
-      </div>`).join("")}
-    </div>`).join("");
-  $("resList").querySelectorAll("[data-r]").forEach(b => b.onclick = async () => {
-    if(!confirm("¿Anular esta reserva? El regalo volverá a quedar disponible.")) return;
-    await sb.from("gift_reservations").delete().eq("id",b.dataset.r);
-    loadReservas(); loadGifts();
-  });
-}
-
-/* ---------- avisos ---------- */
-$("btnSavePost").onclick = async () => {
-  const m = $("pMsg");
-  const title = $("pTitle").value.trim(), body = $("pBody").value.trim();
-  if(!title || !body){ m.textContent = "Título y texto son obligatorios."; m.className = "msg err"; return; }
-  const { error } = await sb.from("gift_posts").insert({ title, body });
-  if(error){ m.textContent = "Error: " + error.message; m.className = "msg err"; return; }
-  $("pTitle").value = ""; $("pBody").value = "";
-  m.textContent = "Aviso publicado."; m.className = "msg ok"; loadPosts();
-};
-
-async function loadPosts(){
-  const { data } = await sb.from("gift_posts").select("*").order("created_at",{ascending:false});
-  $("postList").innerHTML = (data||[]).map(p => `
-    <div class="item"><h4>${esc(p.title)} <span class="badge ${p.is_published?"":"off"}">${p.is_published?"Publicado":"Oculto"}</span></h4>
-      <div class="sub2" style="white-space:pre-wrap">${esc(p.body)}</div>
-      <div class="btns">
-        <button class="small" data-t="${p.id}">${p.is_published?"Ocultar":"Publicar"}</button>
-        <button class="small danger" data-d="${p.id}">Eliminar</button>
-      </div>
-    </div>`).join("") || `<p class="sub">No hay avisos.</p>`;
-  $("postList").querySelectorAll("[data-t]").forEach(b => b.onclick = async () => {
-    const p = (data||[]).find(x=>x.id===b.dataset.t);
-    await sb.from("gift_posts").update({is_published:!p.is_published}).eq("id",p.id); loadPosts();
-  });
-  $("postList").querySelectorAll("[data-d]").forEach(b => b.onclick = async () => {
-    if(!confirm("¿Eliminar este aviso?")) return;
-    await sb.from("gift_posts").delete().eq("id",b.dataset.d); loadPosts();
-  });
-}
-
-function refreshAll(){ loadGifts(); loadReservas(); loadPosts(); }
-boot();
+const SUPABASE_URL="https://fporcsfrkknekpkhekur.supabase.co";
+const SUPABASE_KEY="sb_publishable_dAC--LaF0m3ofm_HGBpp4Q_cHhlKOez";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id),esc=s=>(s??"").toString().replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#39;");let gifts=[];
+async function boot(){const {data:{session}}=await sb.auth.getSession();$("login").style.display=session?"none":"block";$("app").style.display=session?"block":"none";if(session)refreshAll();}
+$("btnLogin").onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$("lEmail").value.trim(),password:$("lPass").value});const m=$("lMsg");if(error){m.textContent="No se pudo iniciar sesión: "+error.message;m.className="msg err";return}boot();};$("btnLogout").onclick=async()=>{await sb.auth.signOut();boot();};
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");["gifts","reservas","posts"].forEach(t=>$("tab-"+t).style.display=t===b.dataset.t?"block":"none");});
+$("gGroup").onchange=()=>$("gSlotsRow").style.display=$("gGroup").checked?"block":"none";$("btnCancelEdit").onclick=()=>fillForm();
+function fillForm(g=null){$("gId").value=g?.id||"";$("gFormTitle").textContent=g?"Editar regalo":"Añadir regalo";$("btnCancelEdit").style.display=g?"inline-block":"none";$("gTitle").value=g?.title||"";$("gDesc").value=g?.description||"";$("gPrice").value=g?.price_estimate??"";$("gCat").value=g?.category||"";$("gUrl").value=g?.product_url||"";$("gImg").value=g?.image_url||"";$("gGroup").checked=!!g?.is_group;$("gGroup").onchange();$("gSlots").value=g?.is_group?g.slots_total:4;$("gActive").checked=g?g.is_active:true;if(g)scrollTo({top:0,behavior:"smooth"});}
+$("btnSaveGift").onclick=async()=>{const m=$("gMsg"),title=$("gTitle").value.trim();if(!title){m.textContent="El nombre es obligatorio.";m.className="msg err";return}const isGroup=$("gGroup").checked,payload={title,description:$("gDesc").value.trim()||null,price_estimate:$("gPrice").value===""?null:Number($("gPrice").value),category:$("gCat").value.trim()||null,product_url:$("gUrl").value.trim()||null,image_url:$("gImg").value.trim()||null,is_group:isGroup,slots_total:isGroup?Math.max(2,Number($("gSlots").value)||2):1,is_active:$("gActive").checked};const id=$("gId").value;const {error}=id?await sb.from("gift_items").update(payload).eq("id",id):await sb.from("gift_items").insert(payload);if(error){m.textContent="Error al guardar: "+error.message;m.className="msg err";return}m.textContent="Guardado.";m.className="msg ok";fillForm();loadGifts();loadReservas();};
+async function loadGifts(){const {data,error}=await sb.from("gift_items").select("*").order("sort_order").order("created_at");if(error){$("giftList").innerHTML=`<p class="msg err" style="display:block">${esc(error.message)}</p>`;return}gifts=data||[];$("giftList").innerHTML=gifts.map(g=>`<div class="item"><h4>${esc(g.title)} <span class="badge ${g.is_active?"":"off"}">${g.is_active?"Visible":"Oculto"}</span>${g.is_group?`<span class="badge">Grupal ${g.slots_taken}/${g.slots_total}</span>`:`<span class="badge ${g.slots_taken?"":"off"}">${g.slots_taken?"Reservado":"Libre"}</span>`}</h4><div class="sub2">${g.category?esc(g.category)+" · ":""}${g.price_estimate!=null?"≈ "+g.price_estimate+" € · ":""}${esc(g.description||"")}</div><div class="btns"><button class="smallbtn" data-e="${g.id}">Editar</button><button class="smallbtn" data-v="${g.id}">${g.is_active?"Ocultar":"Mostrar"}</button><button class="smallbtn danger" data-d="${g.id}">Eliminar</button></div></div>`).join("")||`<p class="sub">Aún no hay regalos.</p>`;$("giftList").querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>fillForm(gifts.find(x=>x.id===b.dataset.e)));$("giftList").querySelectorAll("[data-v]").forEach(b=>b.onclick=async()=>{const g=gifts.find(x=>x.id===b.dataset.v);await sb.from("gift_items").update({is_active:!g.is_active}).eq("id",g.id);loadGifts();});$("giftList").querySelectorAll("[data-d]").forEach(b=>b.onclick=async()=>{if(!confirm("¿Eliminar este regalo y sus reservas?"))return;await sb.from("gift_items").delete().eq("id",b.dataset.d);loadGifts();loadReservas();});}
+async function loadReservas(){const {data,error}=await sb.from("gift_reservations").select("*, gift_items(title)").order("created_at",{ascending:false});if(error){$("resList").innerHTML=`<p class="msg err" style="display:block">${esc(error.message)}</p>`;return}if(!data?.length){$("resList").innerHTML=`<p class="sub">Todavía no hay reservas.</p>`;return}const by={};data.forEach(r=>(by[r.gift_items?.title||"—"]??=[]).push(r));$("resList").innerHTML=Object.entries(by).map(([t,rs])=>`<div class="item"><h4>${esc(t)}</h4>${rs.map(r=>`<div class="res"><div><span class="who">${esc(r.reserver_name)}</span>${r.slots>1?` <span class="badge">${r.slots} particip.</span>`:""}<div class="small">${r.reserver_contact?esc(r.reserver_contact)+" · ":""}${r.note?"«"+esc(r.note)+"» · ":""}${new Date(r.created_at).toLocaleDateString("es-ES")}</div></div><button class="smallbtn danger" data-r="${r.id}">Anular</button></div>`).join("")}</div>`).join("");$("resList").querySelectorAll("[data-r]").forEach(b=>b.onclick=async()=>{if(!confirm("¿Anular esta reserva?"))return;await sb.from("gift_reservations").delete().eq("id",b.dataset.r);loadReservas();loadGifts();});}
+$("btnSavePost").onclick=async()=>{const m=$("pMsg"),title=$("pTitle").value.trim(),body=$("pBody").value.trim();if(!title||!body){m.textContent="Título y texto son obligatorios.";m.className="msg err";return}const {error}=await sb.from("gift_posts").insert({title,body});if(error){m.textContent="Error: "+error.message;m.className="msg err";return}$("pTitle").value="";$("pBody").value="";m.textContent="Aviso publicado.";m.className="msg ok";loadPosts();};
+async function loadPosts(){const {data}=await sb.from("gift_posts").select("*").order("created_at",{ascending:false});$("postList").innerHTML=(data||[]).map(p=>`<div class="item"><h4>${esc(p.title)} <span class="badge ${p.is_published?"":"off"}">${p.is_published?"Publicado":"Oculto"}</span></h4><div class="sub2">${esc(p.body)}</div><div class="btns"><button class="smallbtn" data-t="${p.id}">${p.is_published?"Ocultar":"Publicar"}</button><button class="smallbtn danger" data-d="${p.id}">Eliminar</button></div></div>`).join("")||`<p class="sub">No hay avisos.</p>`;$("postList").querySelectorAll("[data-t]").forEach(b=>b.onclick=async()=>{const p=(data||[]).find(x=>x.id===b.dataset.t);await sb.from("gift_posts").update({is_published:!p.is_published}).eq("id",p.id);loadPosts();});$("postList").querySelectorAll("[data-d]").forEach(b=>b.onclick=async()=>{if(!confirm("¿Eliminar aviso?"))return;await sb.from("gift_posts").delete().eq("id",b.dataset.d);loadPosts();});}
+function refreshAll(){loadGifts();loadReservas();loadPosts();}boot();
 </script>
 </body>
 </html>
