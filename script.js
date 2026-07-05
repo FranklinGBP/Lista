@@ -1,26 +1,19 @@
-const products = [
-  { id: "panales-talla-1", name: "Pañales talla 1", category: "Higiene", priority: "imprescindible", description: "Para los primeros días." },
-  { id: "toallitas-agua", name: "Toallitas al agua", category: "Higiene", priority: "imprescindible", description: "Suaves y prácticas para casa o paseo." },
-  { id: "crema-panial", name: "Crema para el pañal", category: "Higiene", priority: "imprescindible", description: "Para proteger la piel del bebé." },
-  { id: "bodys-algodon", name: "Bodys de algodón", category: "Ropa", priority: "imprescindible", description: "Pack de bodys cómodos para recién nacido." },
-  { id: "pijamas", name: "Pijamas enteros", category: "Ropa", priority: "imprescindible", description: "Mejor con apertura fácil para cambiarlo." },
-  { id: "muselinas", name: "Muselinas", category: "Textil", priority: "imprescindible", description: "Sirven para casi todo y siempre hacen falta." },
-  { id: "mantita", name: "Mantita suave", category: "Textil", priority: "recomendado", description: "Para paseo, sofá o visitas." },
-  { id: "termometro", name: "Termómetro digital", category: "Salud", priority: "imprescindible", description: "Básico para tener en casa." },
-  { id: "banera", name: "Bañera o soporte de baño", category: "Baño", priority: "recomendado", description: "Para bañar al bebé con comodidad." },
-  { id: "gel-bebe", name: "Gel y champú bebé", category: "Baño", priority: "recomendado", description: "Producto suave para recién nacido." },
-  { id: "cambiador", name: "Cambiador portátil", category: "Paseo", priority: "recomendado", description: "Muy útil para salir de casa." },
-  { id: "chupetes", name: "Chupetes recién nacido", category: "Accesorios", priority: "opcional", description: "Puede ir bien tener alguno preparado." },
-  { id: "biberones", name: "Biberones anticólicos", category: "Alimentación", priority: "opcional", description: "Útiles si se combinan tomas o se necesitan." },
-  { id: "baberos", name: "Baberos pequeños", category: "Alimentación", priority: "recomendado", description: "Para tomas y babitas." },
-  { id: "mochila-panales", name: "Mochila para pañales", category: "Paseo", priority: "opcional", description: "Para llevar lo básico del bebé." }
+const DEFAULT_PRODUCTS = [
+  { id: "panales-talla-1", name: "Pañales talla 1", category: "Higiene", priority: "imprescindible", description: "Para los primeros días.", purchase_url: "" },
+  { id: "toallitas-agua", name: "Toallitas al agua", category: "Higiene", priority: "imprescindible", description: "Suaves y prácticas para casa o paseo.", purchase_url: "" },
+  { id: "crema-panial", name: "Crema para el pañal", category: "Higiene", priority: "imprescindible", description: "Para proteger la piel del bebé.", purchase_url: "" },
+  { id: "bodys-algodon", name: "Bodys de algodón", category: "Ropa", priority: "imprescindible", description: "Pack de bodys cómodos para recién nacido.", purchase_url: "" },
+  { id: "pijamas", name: "Pijamas enteros", category: "Ropa", priority: "imprescindible", description: "Mejor con apertura fácil para cambiarlo.", purchase_url: "" },
+  { id: "muselinas", name: "Muselinas", category: "Textil", priority: "imprescindible", description: "Sirven para casi todo y siempre hacen falta.", purchase_url: "" }
 ];
 
+let products = [...DEFAULT_PRODUCTS];
 const productLinks = window.PRODUCT_LINKS || {};
 const appConfig = window.APP_CONFIG || {};
 const stateKey = `baby-list-reservations-${appConfig.listId || "local"}`;
 const hasSupabase = Boolean(appConfig.supabaseUrl && appConfig.supabaseAnonKey);
-const apiBaseUrl = hasSupabase ? `${appConfig.supabaseUrl}/rest/v1/baby_reservations` : "";
+const reservationsApiUrl = hasSupabase ? `${appConfig.supabaseUrl}/rest/v1/baby_reservations` : "";
+const productsApiUrl = hasSupabase ? `${appConfig.supabaseUrl}/rest/v1/baby_products` : "";
 const listId = appConfig.listId || "familia-bebe";
 const refreshIntervalMs = 12000;
 
@@ -55,6 +48,33 @@ function setStatus(message, type = "") {
   syncStatus.className = `sync-status ${type}`.trim();
 }
 
+function mapProduct(row) {
+  return {
+    id: String(row.id),
+    name: row.name || "Sin nombre",
+    category: row.category || "General",
+    priority: row.priority || "recomendado",
+    description: row.description || "",
+    purchase_url: row.purchase_url || ""
+  };
+}
+
+async function loadRemoteProducts() {
+  if (!hasSupabase) return;
+
+  try {
+    const url = `${productsApiUrl}?list_id=eq.${encodeURIComponent(listId)}&is_active=eq.true&select=id,name,description,category,priority,purchase_url,sort_order&order=sort_order.asc&order=name.asc`;
+    const response = await fetch(url, { headers: getHeaders({ "Cache-Control": "no-cache" }) });
+    if (!response.ok) throw new Error(`Error cargando productos: ${response.status}`);
+
+    const rows = await response.json();
+    if (rows.length > 0) products = rows.map(mapProduct);
+  } catch (error) {
+    console.error(error);
+    setStatus("No se pudieron cargar productos de Supabase. Se muestra la lista base.", "warn");
+  }
+}
+
 function reservationsFromRows(rows) {
   return rows.reduce((acc, row) => {
     if (row.item_id && row.reserved_by) acc[row.item_id] = row.reserved_by;
@@ -70,7 +90,7 @@ async function loadRemoteReservations({ silent = false } = {}) {
 
   try {
     if (!silent) setStatus("Sincronizando lista...");
-    const url = `${apiBaseUrl}?list_id=eq.${encodeURIComponent(listId)}&select=item_id,reserved_by`;
+    const url = `${reservationsApiUrl}?list_id=eq.${encodeURIComponent(listId)}&select=item_id,reserved_by`;
     const response = await fetch(url, { headers: getHeaders({ "Cache-Control": "no-cache" }) });
     if (!response.ok) throw new Error(`Error cargando reservas: ${response.status}`);
 
@@ -93,7 +113,7 @@ async function reserveRemote(productId, reservedBy) {
     return;
   }
 
-  const response = await fetch(apiBaseUrl, {
+  const response = await fetch(reservationsApiUrl, {
     method: "POST",
     headers: getHeaders({ Prefer: "resolution=merge-duplicates,return=minimal" }),
     body: JSON.stringify({ list_id: listId, item_id: productId, reserved_by: reservedBy, updated_at: new Date().toISOString() })
@@ -111,7 +131,7 @@ async function releaseRemote(productId) {
     return;
   }
 
-  const url = `${apiBaseUrl}?list_id=eq.${encodeURIComponent(listId)}&item_id=eq.${encodeURIComponent(productId)}`;
+  const url = `${reservationsApiUrl}?list_id=eq.${encodeURIComponent(listId)}&item_id=eq.${encodeURIComponent(productId)}`;
   const response = await fetch(url, { method: "DELETE", headers: getHeaders({ Prefer: "return=minimal" }) });
   if (!response.ok) throw new Error(`Error liberando: ${response.status}`);
 
@@ -153,7 +173,7 @@ function renderProducts() {
     const reservedByText = clone.querySelector(".reserved-by");
     const buyLink = clone.querySelector(".buy-link");
     const reservedBy = reservations[product.id] || "";
-    const purchaseUrl = (productLinks[product.id] || "").trim();
+    const purchaseUrl = (product.purchase_url || productLinks[product.id] || "").trim();
 
     category.textContent = product.category;
     priority.textContent = product.priority;
@@ -235,7 +255,19 @@ shareButton.addEventListener("click", async () => {
   setTimeout(() => { shareButton.textContent = "Compartir"; }, 1800);
 });
 
-updateStats();
-renderProducts();
-loadRemoteReservations();
-if (hasSupabase) setInterval(() => loadRemoteReservations({ silent: true }), refreshIntervalMs);
+async function init() {
+  updateStats();
+  renderProducts();
+  await loadRemoteProducts();
+  updateStats();
+  renderProducts();
+  await loadRemoteReservations();
+}
+
+init();
+if (hasSupabase) {
+  setInterval(async () => {
+    await loadRemoteProducts();
+    await loadRemoteReservations({ silent: true });
+  }, refreshIntervalMs);
+}
