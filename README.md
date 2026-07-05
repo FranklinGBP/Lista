@@ -1,77 +1,31 @@
-# Lista para el bebé
+# 🎁 Lista de regalos
 
-Web estática para organizar una lista de cosas a comprar para un bebé y compartirla con familia y amigos.
+Web estática con GitHub Pages + Supabase. Sin backend propio.
 
-## Qué incluye
+- `index.html` — página pública: regalos, avisos del organizador y reservas anónimas.
+- `admin.html` — panel del organizador con login de Supabase Auth para gestionar regalos, avisos y ver quién ha reservado.
+- `supabase/migration.sql` — esquema completo de Supabase.
 
-- Diseño responsive para móvil y ordenador.
-- Productos agrupados por categoría.
-- Filtros por todos, imprescindibles, pendientes y reservados.
-- Opción para escribir quién reserva cada producto.
-- Modo local para pruebas.
-- Modo compartido con Supabase para que todos vean las mismas reservas.
+## Privacidad
 
-## Archivos
+- Los invitados no ven quién reservó.
+- La reserva se hace mediante la función RPC `gift_reserve`.
+- El estado público sale de los contadores `slots_taken` y `slots_total` de `gift_items`.
+- Los regalos grupales usan `is_group = true` y `slots_total > 1`.
+- El admin se identifica por email en la tabla `gift_admins`.
 
-- `index.html`: estructura principal de la web.
-- `styles.css`: estilos visuales.
-- `script.js`: productos, filtros y lógica de reservas.
-- `config.js`: configuración de Supabase.
-- `supabase.sql`: script para crear la tabla de reservas compartidas.
+## URLs
 
-## Publicar en GitHub Pages
+- Lista pública: `https://franklingbp.github.io/Lista/`
+- Panel admin: `https://franklingbp.github.io/Lista/admin.html`
 
-La URL correcta del proyecto será:
+## Puesta en marcha
 
-`https://FranklinGBP.github.io/Lista/`
+1. Crear el usuario admin en Supabase: Dashboard > Authentication > Users > Add user.
+2. Añadir el email en `gift_admins`.
+3. Si cambias de proyecto de Supabase, ejecuta `supabase/migration.sql`.
+4. GitHub Pages debe apuntar a la rama `gh-pages`.
 
-Si entras solo en `https://FranklinGBP.github.io/`, puede salir 404 porque esa es la web raíz de la cuenta, no la del repositorio `Lista`.
+## Anular una reserva
 
-Pasos:
-
-1. Entra en el repositorio en GitHub.
-2. Ve a `Settings` > `Pages`.
-3. En `Build and deployment`, selecciona:
-   - Source: `Deploy from a branch`
-   - Branch: `main`
-   - Folder: `/root`
-4. Guarda los cambios.
-5. Espera 1 o 2 minutos y abre `https://FranklinGBP.github.io/Lista/`.
-
-Importante: si GitHub Pages no te deja publicarlo desde un repositorio privado, cambia el repositorio a público o usa un despliegue tipo Netlify/Vercel.
-
-## Activar reservas compartidas con Supabase
-
-La web ya está preparada, pero falta configurar Supabase.
-
-### 1. Crear proyecto
-
-1. Entra en Supabase.
-2. Crea un proyecto nuevo.
-3. Cuando esté creado, ve a `Project Settings` > `API`.
-4. Copia:
-   - `Project URL`
-   - `anon public key`
-
-### 2. Crear tabla
-
-1. En Supabase, ve a `SQL Editor`.
-2. Copia y ejecuta el contenido del archivo `supabase.sql`.
-
-### 3. Configurar la web
-
-Edita `config.js` y rellena:
-
-```js
-window.APP_CONFIG = {
-  supabaseUrl: "https://TU-PROYECTO.supabase.co",
-  supabaseAnonKey: "TU-ANON-PUBLIC-KEY",
-  listId: "familia-bebe-2026"
-};
-```
-
-Cuando esté configurado, cualquier persona con el enlace podrá reservar o liberar productos y los demás lo verán también.
-
-## Nota de seguridad
-
-Esta lista está pensada para compartir por enlace con familia y amigos. No tiene login. Cualquiera que tenga el enlace podrá modificar reservas.
+Desde el panel: pestaña Reservas > Anular. El trigger libera las plazas automáticamente.
